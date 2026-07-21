@@ -12,14 +12,25 @@ const authRoutes = require('./src/routes/auth')
 
 app.use(express.json())
 app.use(cookieParser())
+
+
+const allowedOrigins = [
+  'https://hazard-aware.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173'
+];
+
 app.use(cors({
-  // 1. Explicitly allow your frontend local port
-  origin: '*', 
-  
-  // 2. Crucial for allowing cookies to be sent and received
-  credentials: true, 
-  
-  // 3. Optional: Specify allowed methods
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, or Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS policy check failed'));
+    }
+  },
+  credentials: true, // Required for cookies / withCredentials requests
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
