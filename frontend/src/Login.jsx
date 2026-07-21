@@ -11,7 +11,7 @@ export default function Login({ setIsAuthenticated }) {
 
   const handleLogin = async (e) => {e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/user/login', { email, password });
+      const response = await axios.post('https://hazard-aware.onrender.com/user/login', { email, password });
       
       // 1. Extract the token from the JSON response body
       const { token, user } = response.data;
