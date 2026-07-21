@@ -14,7 +14,7 @@ function Dashboard() {
 
   useEffect(() => {
     // 1. Establish connection to the Node.js SSE stream
-    const eventSource = new EventSource('http://localhost:5000/api/stream');
+    const eventSource = new EventSource('https://hazard-aware.onrender.com/api/stream');
 
     // 2. Listen for incoming JSON packets
     eventSource.onmessage = (event) => {
