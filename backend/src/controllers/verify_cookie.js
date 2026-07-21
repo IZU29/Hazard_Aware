@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/user');
 
 const refresh = async (req, res) => {
   // 1. Grab the HTTP-only cookie from the incoming headers
