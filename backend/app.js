@@ -10,8 +10,7 @@ const cookieParser = require('cookie-parser')
 const authRoutes = require('./src/routes/auth')
 
 
-app.use(express.json())
-app.use(cookieParser())
+
 
 
 const allowedOrigins = [
@@ -35,6 +34,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+app.use(express.json())
+app.use(cookieParser())
 
 app.use('/user', UserRouter)
 app.use('/api/auth', authRoutes);
