@@ -8,7 +8,7 @@ export default function Login({ setIsAuthenticated }) {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const navigate = useNavigate();
   const handleLogin = async (e) => {e.preventDefault();
     try {
       const response = await axios.post('https://hazard-aware.onrender.com/user/login', { email, password });
