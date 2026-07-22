@@ -6,7 +6,7 @@ import axios from 'axios';
 
 // CRITICAL: Tells Axios to send and receive cookies automatically
 axios.defaults.withCredentials = true; 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://hazard-aware.onrender.com/';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
