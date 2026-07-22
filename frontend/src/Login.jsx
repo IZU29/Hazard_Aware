@@ -20,7 +20,7 @@ export default function Login({ setIsAuthenticated }) {
       localStorage.setItem('token', token);
       setIsAuthenticated(true)
       // 3. Successfully redirect home!
-      navigate('/home');
+      navigate('/home' , { replace: true });
       
     } catch (error) {
       console.error("Login failed:", error.response?.data?.message || error.message);

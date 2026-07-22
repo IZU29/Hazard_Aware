@@ -6,32 +6,24 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'https://api.yourdomain.com';
 
 export default function Home({ setIsAuthenticated }) {
-  const currentPath = location.pathname;
   const navigate = useNavigate();
-  const [checkingAuth , setCheckingAuth] = useState('false')
+
   useEffect(() => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        // Token found, send them to the IoT landing home dashboard
-        if (currentPath === '/login' || currentPath === '/register' || currentPath === '/') {
-        navigate('/home');
-      }
-      } else {
-        // No token, redirect to login
-        if (currentPath === '/home' || currentPath === '/') {
-        navigate('/login');
-      }
-      }
-      setCheckingAuth(false);
-    }, [navigate]);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setIsAuthenticated(false);
+      navigate('/login', { replace: true });
+    }
+  }, [navigate, setIsAuthenticated]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Destroy session
-    setIsAuthenticated(false); // Triggers React Router to kick them back to /login
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    navigate('/login', { replace: true });
   };
 
   return (
-    <div style={{ padding: '40px', textAlignment: 'center' }}>
+    <div style={{ padding: '40px', textAlign: 'center' }}>
       <Dashboard />
     </div>
   );
