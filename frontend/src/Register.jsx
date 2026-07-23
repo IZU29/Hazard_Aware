@@ -18,19 +18,21 @@ const handleRegister = async (e) => {
 
     try {
       // 1. Send credentials to backend
-      const response = await axios.post('/user/register', {
+      const response = await axios.post('https://hazard-aware.onrender.com/user/register', {
         name: name,
         email: email,
         password: password,
         role: 'user',
-        isVerified: false
+        isVerified: false,
+        accountStatus: 'active'
       });
-      console.log("👉 FRONTEND BUTTON WAS SUCCESSFULLY CLICKED!");
+      const { token, user } = response.data;
+      console.log(response);
       // 2. If backend validates successfully, it will have sent a 'Set-Cookie' header.
       // Your browser automatically saves it. We just update the frontend state.
-      if (response.status === 200) {
+        localStorage.setItem('token', token);
         setIsAuthenticated(true); 
-      }
+        navigate('/home' , { replace: true });
 
     } catch (err) {
       // 3. Handle errors gracefully

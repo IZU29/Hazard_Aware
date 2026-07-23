@@ -23,7 +23,7 @@ export default function Home({ setIsAuthenticated }) {
   };
 
   return (
-    <div style={{ padding: '40px', textAlign: 'center' }}>
+    <div style={{textAlign: 'center' }}>
       <Dashboard />
     </div>
   );
