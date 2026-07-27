@@ -4,9 +4,9 @@ import io from 'socket.io-client';
 // Points to your Express/Socket.io server
 const BACKEND_URL = 'https://hazard-aware.onrender.com' || 'https:localhost:5000';
 
-const socket = io(BACKEND_URL, {
+const socket = io('https://hazard-aware.onrender.com', {
   withCredentials: true,
-  transports: ['websocket', 'polling']
+  transports: ['polling', 'websocket'] // 'polling' first gives a reliable handshake on Render
 });
 
 const LiveStream = () => {

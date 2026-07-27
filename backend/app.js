@@ -16,7 +16,27 @@ const {attachCameraWS} = require('./src/utils/cam')
 // Create HTTP server instance wrapped around Express
 const server = http.createServer(app);
 
+const allowedOrigins = [
+  'https://hazard-aware.vercel.app', // Make sure this matches your exact Vercel URL
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
 // 1. Socket.io setup for Frontend Dashboard
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS policy check failed'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+
 const io = new Server(server, {
   cors: {
     origin: [
