@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LiveStream from './Livestream';
 
 function Dashboard() {
   // State to hold our real-time hardware values
@@ -97,7 +98,9 @@ function Dashboard() {
             {systemState.flame}
           </p>
         </div>
-
+          <div className="">
+             <LiveStream />
+          </div>
       </div>
     </div>
   );
