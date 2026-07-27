@@ -24,11 +24,18 @@ const allowedOrigins = [
 // 1. Socket.io setup for Frontend Dashboard
 app.use(cors({
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, or ESP32)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    
+    // Normalize trailing slashes just in case
+    const cleanOrigin = origin.replace(/\/$/, '');
+    
+    if (allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
-      return callback(new Error('CORS policy check failed'));
+      console.warn(`Blocked by CORS: ${origin}`);
+      // Return false instead of throwing a hard Error to prevent unhandled express crashes
+      return callback(null, false); 
     }
   },
   credentials: true,
@@ -39,11 +46,7 @@ app.use(cors({
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      'https://hazard-aware.vercel.app',
-      'http://localhost:3000',
-      'http://localhost:5173'
-    ],
+    origin: allowedOrigins,
     credentials: true
   }
 });
