@@ -20,7 +20,7 @@ const server = http.createServer(app);
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://your-harm-aware-dashboard.vercel.app' // Add your deployed frontend URL here
+  'https://hazard-aware.onrender.com' // Add your deployed frontend URL here
 ];
 
 const checkOrigin = (origin, callback) => {
