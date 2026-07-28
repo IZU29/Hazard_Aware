@@ -43,6 +43,24 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+const checkOrigin = (origin, callback) => {
+  // Allow non-browser requests (ESP32, Postman, mobile apps)
+  if (!origin) return callback(null, true);
+
+  const cleanOrigin = origin.replace(/\/$/, '');
+
+  if (
+    allowedOrigins.includes(origin) ||
+    allowedOrigins.includes(cleanOrigin) ||
+    origin.endsWith('.vercel.app')
+  ) {
+    return callback(null, true);
+  }
+
+  console.warn(`Blocked by CORS: ${origin}`);
+  return callback(new Error('CORS policy check failed'));
+};
+
 const io = new Server(server, {
   path: '/socket.io/', // Explicitly set path
   cors: {
