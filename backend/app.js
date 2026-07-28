@@ -74,7 +74,7 @@ attachCameraWS(server, io);
 // setInterval(Component , 1000)
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT ,'0.0.0.0',() => {
-    ConnectDB(process.env.MONGO_URI)
-    console.log(`Server is listening on port ${5000}`)
-})
+server.listen(PORT, '0.0.0.0', () => {
+  ConnectDB(process.env.MONGO_URI);
+  console.log(`Server is listening on port ${PORT}`);
+});
