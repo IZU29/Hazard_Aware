@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import {io} from 'socket.io-client';
 
 // Points to your Express/Socket.io server
 const BACKEND_URL = 'https://hazard-aware.onrender.com' || 'https:localhost:5000';
 
 const socket = io('https://hazard-aware.onrender.com', {
+  path: '/socket.io/',
   withCredentials: true,
-  transports: ['polling', 'websocket'] // 'polling' first gives a reliable handshake on Render
+  transports: ['polling', 'websocket'], // Let polling perform handshake first
+  reconnectionAttempts: 10,
+  reconnectionDelay: 2000
 });
 
 const LiveStream = () => {

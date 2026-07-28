@@ -43,14 +43,16 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-
 const io = new Server(server, {
+  path: '/socket.io/', // Explicitly set path
   cors: {
-    origin: allowedOrigins,
-    credentials: true
-  }
+    origin: checkOrigin,
+    credentials: true,
+    methods: ['GET', 'POST']
+  },
+  transports: ['polling', 'websocket'], // Allow polling handshake before websocket upgrade
+  allowEIO3: true // Ensures backward compatibility with Engine.IO v3/v4 clients
 });
-
 
 app.use(express.json())
 app.use(cookieParser())
