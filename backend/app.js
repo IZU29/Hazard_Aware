@@ -20,18 +20,27 @@ const server = http.createServer(app);
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://hazard-aware.onrender.com' // Add your deployed frontend URL here
+  'https://hazard-aware.vercel.app' // Live Vercel Frontend
 ];
 
+// 2. Shared Origin Check Function
 const checkOrigin = (origin, callback) => {
-  if (!origin) return callback(null, true); // Allow non-browser requests (ESP32)
+  // Allow non-browser agents (ESP32), disk files (file://), or null origins
+  if (!origin || origin === 'file://' || origin === 'null') {
+    return callback(null, true);
+  }
+
   const cleanOrigin = origin.replace(/\/$/, '');
   if (allowedOrigins.includes(origin) || allowedOrigins.includes(cleanOrigin)) {
-    return callback(null, origin);
+    return callback(null, true);
   }
-  return callback(new Error('CORS policy check failed'));
+
+  console.warn(`Blocked by CORS: ${origin}`);
+  // Pass 'false' instead of throwing an Error to avoid unhandled express crashes
+  return callback(null, false);
 };
 
+// 3. Socket.io Setup for Frontend Dashboard & ESP32 WebSockets
 const io = new Server(server, {
   path: '/socket.io/',
   cors: {
@@ -41,23 +50,10 @@ const io = new Server(server, {
   },
   transports: ['polling', 'websocket']
 });
-// 1. Socket.io setup for Frontend Dashboard
+
+// 4. Express HTTP CORS Middleware
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, or ESP32)
-    if (!origin) return callback(null, true);
-    
-    // Normalize trailing slashes just in case
-    const cleanOrigin = origin.replace(/\/$/, '');
-    
-    if (allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      console.warn(`Blocked by CORS: ${origin}`);
-      // Return false instead of throwing a hard Error to prevent unhandled express crashes
-      return callback(null, false); 
-    }
-  },
+  origin: checkOrigin,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
