@@ -18,9 +18,11 @@ const LiveStream = () => {
 
   useEffect(() => {
     // Listen for binary video frames sent from backend via Socket.io
+    
     socket.on('video-frame', (buffer) => {
+      const arrayBuffer = buffer instanceof ArrayBuffer ? buffer : buffer.buffer || buffer;
       // Convert raw binary ArrayBuffer to a browser image Blob
-      const blob = new Blob([buffer], { type: 'image/jpeg' });
+      const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
       const url = URL.createObjectURL(blob);
 
       setImageSrc((prevUrl) => {

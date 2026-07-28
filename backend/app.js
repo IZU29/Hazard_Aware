@@ -16,11 +16,31 @@ const {attachCameraWS} = require('./src/utils/cam')
 // Create HTTP server instance wrapped around Express
 const server = http.createServer(app);
 
+// app.js
 const allowedOrigins = [
-  'https://hazard-aware.vercel.app', // Make sure this matches your exact Vercel URL
   'http://localhost:5173',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'https://your-harm-aware-dashboard.vercel.app' // Add your deployed frontend URL here
 ];
+
+const checkOrigin = (origin, callback) => {
+  if (!origin) return callback(null, true); // Allow non-browser requests (ESP32)
+  const cleanOrigin = origin.replace(/\/$/, '');
+  if (allowedOrigins.includes(origin) || allowedOrigins.includes(cleanOrigin)) {
+    return callback(null, origin);
+  }
+  return callback(new Error('CORS policy check failed'));
+};
+
+const io = new Server(server, {
+  path: '/socket.io/',
+  cors: {
+    origin: checkOrigin,
+    credentials: true,
+    methods: ['GET', 'POST']
+  },
+  transports: ['polling', 'websocket']
+});
 // 1. Socket.io setup for Frontend Dashboard
 app.use(cors({
   origin: function (origin, callback) {
@@ -43,34 +63,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-const checkOrigin = (origin, callback) => {
-  // Allow non-browser requests (ESP32, Postman, mobile apps)
-  if (!origin) return callback(null, true);
-
-  const cleanOrigin = origin.replace(/\/$/, '');
-
-  if (
-    allowedOrigins.includes(origin) ||
-    allowedOrigins.includes(cleanOrigin) ||
-    origin.endsWith('.vercel.app')
-  ) {
-    return callback(null, true);
-  }
-
-  console.warn(`Blocked by CORS: ${origin}`);
-  return callback(new Error('CORS policy check failed'));
-};
-
-const io = new Server(server, {
-  path: '/socket.io/', // Explicitly set path
-  cors: {
-    origin: checkOrigin,
-    credentials: true,
-    methods: ['GET', 'POST']
-  },
-  transports: ['polling', 'websocket'], // Allow polling handshake before websocket upgrade
-  allowEIO3: true // Ensures backward compatibility with Engine.IO v3/v4 clients
-});
 
 app.use(express.json())
 app.use(cookieParser())

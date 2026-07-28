@@ -1,34 +1,28 @@
-const { WebSocketServer } = require('ws');
-
-/**
- * Attaches the ESP32-CAM WebSocket handler to the HTTP server.
- * @param {import('http').Server} server 
- * @param {import('socket.io').Server} io 
- */
+// cam.js
 const attachCameraWS = (server, io) => {
-  const wss = new WebSocketServer({ noServer: true });
+  const WebSocket = require('ws');
+  const wss = new WebSocket.Server({ noServer: true });
 
-  // Intercept raw HTTP upgrade requests safely
   server.on('upgrade', (request, socket, head) => {
     const url = new URL(request.url, `http://${request.headers.host}`);
-
-    // Let Socket.io handle its own handshake paths!
+    
+    // Ignore Socket.io engine requests
     if (url.pathname.startsWith('/socket.io/')) {
-      return; 
+      return;
     }
 
-    // Handle ESP32 camera websocket upgrades on root / or /camera
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit('connection', ws, request);
     });
   });
 
   wss.on('connection', (ws) => {
-    console.log('📷 ESP32-CAM connected to WebSocket');
+    console.log('📷 ESP32-CAM connected via WebSocket');
 
     ws.on('message', (data, isBinary) => {
       if (isBinary && io) {
-        io.emit('video-frame', data);
+        // 'volatile' prevents server memory overhead if a client network drops frames
+        io.volatile.emit('video-frame', data);
       }
     });
 
@@ -37,4 +31,4 @@ const attachCameraWS = (server, io) => {
   });
 };
 
-module.exports = { attachCameraWS }
+module.exports = { attachCameraWS };
