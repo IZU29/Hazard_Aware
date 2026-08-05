@@ -8,7 +8,9 @@ let systemState = {
     temp: "--°C",
     flame: "Safe",
     gas: 0,
-    lastCardId: "No Scan"
+    lastCardId: "No Scan",
+    hazardState : "Normal",
+    confidence : 100
 };
 
 let connectedWebClients = [];
@@ -30,6 +32,8 @@ mqttClient.on('message', (topic, message) => {
             systemState.temp = payload.temp;
             systemState.flame = payload.flame;
             systemState.gas = payload.gas;
+            systemState.hazardState = payload.hazard;
+            systemState.confidence = payload.confidence;
         } else if (payload.type === "ACCESS") {
             systemState.lastCardId = payload.cardId;
         }
