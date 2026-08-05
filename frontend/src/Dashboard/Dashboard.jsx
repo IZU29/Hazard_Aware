@@ -8,7 +8,9 @@ function Dashboard() {
     temp: "--°C",
     flame: "Safe",
     gas: 0,
-    lastCardId: "No Scan"
+    lastCardId: "No Scan",
+    hazardState: "None",
+    confidence : 0
   });
 
   const [isOnline, setIsOnline] = useState(false);
@@ -81,6 +83,11 @@ function Dashboard() {
           <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
             <h3 className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Gas Level</h3>
             <p className="text-3xl font-mono font-extrabold mt-2 text-blue-400">{systemState.gas}</p>
+          </div>
+            {/*AI confidence*/}
+          <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
+            <h3 className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Hazard Confidence</h3>
+            <p className="text-3xl font-mono font-extrabold mt-2 text-blue-400">{systemState.hazardState} : {systemState.confidence}</p>
           </div>
 
         </div>
