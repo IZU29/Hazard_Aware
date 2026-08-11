@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LiveStream from './Livestream';
+import Header from './Header';
 
 function Dashboard() {
   // State to hold our real-time hardware values
@@ -46,7 +47,8 @@ function Dashboard() {
   }, []); // Empty dependency array means this runs exactly once on mount
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-8 flex flex-col items-center">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center">
+      <Header />
       <div className="w-full max-w-4xl">
         
         {/* Header */}

@@ -14,7 +14,7 @@ const login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     // Generate the same 7-day token configuration
-    const token = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id  , name : user.name , role: user.role , email : user.email}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
 
     // ESSENTIAL: Send a clean JSON response back to Postman/Browser
     return res.status(200).json({
@@ -40,7 +40,7 @@ const Register = async (req, res) => {
     await newUser.save();
 
     // Generate ONE long-lived token (e.g., 7 days)
-    const token = jwt.sign({ userId: newUser._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id  , name : user.name , role: user.role , email : user.email}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
 
     // ESSENTIAL: Send a clean JSON response back to end the request smoothly
     return res.status(201).json({

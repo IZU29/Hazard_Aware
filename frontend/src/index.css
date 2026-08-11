@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+
+@theme {
+  /* Dark Theme Palette */
+  --color-dark-bg: #0F1115;
+  --color-dark-surface: #16191E;
+  --color-dark-border: #262A33;
+  --color-dark-hover: #1F232B;
+
+  /* Semantic Status Colors */
+  --color-status-safe: #10B981;
+  --color-status-warning: #F59E0B;
+  --color-status-critical: #EF4444;
+  --color-status-info: #3B82F6;
+}
