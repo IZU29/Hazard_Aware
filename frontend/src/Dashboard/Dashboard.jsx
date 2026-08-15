@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import LiveStream from './Livestream';
 import Header from './Header';
-
+import Sidebar from './SideBar';
 function Dashboard() {
   // State to hold our real-time hardware values
   const [systemState, setSystemState] = useState({
@@ -15,7 +15,8 @@ function Dashboard() {
   });
 
   const [isOnline, setIsOnline] = useState(false);
-
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   useEffect(() => {
     // 1. Establish connection to the Node.js SSE stream
     const eventSource = new EventSource('https://hazard-aware.onrender.com/api/stream' || 'https:localhost:5000/api/stream');
@@ -45,14 +46,27 @@ function Dashboard() {
       eventSource.close();
     };
   }, []); // Empty dependency array means this runs exactly once on mount
+  const handleCloseNotifications = () => {
+    setIsNotificationOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center">
-      <Header />
-      <div className="w-full max-w-4xl">
-        
+      <Header 
+      onMobileMenuToggle={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+      isNotificationOpen={isNotificationOpen}
+      onToggleNotifications={() => setIsNotificationOpen(!isNotificationOpen)}
+      onCloseNotifications={handleCloseNotifications}
+      />
+      <div className="flex flex-1 min-h-0 w-full overflow-hidden">
+        <Sidebar
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+        onOpenNotifications={() => setIsNotificationOpen(true)}
+        />
         {/* Header */}
-        <header className="mb-8 border-b border-slate-800 pb-4">
+        <div className=" w-full p-4">
+        {/* <header className="mb-8 border-b border-slate-800 pb-4">
           <h1 className="text-3xl font-extrabold tracking-tight text-cyan-400">
             HARM-AWARE GATEWAY
           </h1>
@@ -64,52 +78,55 @@ function Dashboard() {
             )}
             <span className="ml-4 text-xs text-slate-500">({systemState.timestamp})</span>
           </p>
-        </header>
+        </header> */}
 
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card Reader */}
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
-            <h3 className="text-xs uppercase font-semibold text-slate-500 tracking-wider">RFID Access</h3>
-            <p className="text-xl font-bold mt-2 text-slate-200">{systemState.lastCardId}</p>
+          <div className="bg-[#101726] border border-[#1e293b] p-5 rounded-lg shadow-sm">
+            <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">RFID Access</h3>
+            <p className="text-3xl font-mono font-extrabold mt-2 text-cyan-400">{systemState.lastCardId}</p>
           </div>
 
           {/* Temperature */}
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
-            <h3 className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Temperature</h3>
+          <div className="bg-[#101726] border border-[#1e293b] p-5 rounded-lg shadow-sm">
+            <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Temperature</h3>
             <p className="text-3xl font-mono font-extrabold mt-2 text-cyan-400">{systemState.temp}</p>
           </div>
 
           {/* Gas Level */}
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
-            <h3 className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Gas Level</h3>
-            <p className="text-3xl font-mono font-extrabold mt-2 text-blue-400">{systemState.gas}</p>
+          <div className="bg-[#101726] border border-[#1e293b] p-5 rounded-lg shadow-sm">
+            <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Gas Level</h3>
+            <p className="text-3xl font-mono font-extrabold mt-2 text-cyan-400">{systemState.gas}</p>
           </div>
             {/*AI confidence*/}
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
-            <h3 className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Hazard Confidence</h3>
-            <p className="text-3xl font-mono font-extrabold mt-2 text-blue-400">{systemState.hazardState} : {systemState.confidence}</p>
+          <div className="bg-[#101726] border border-[#1e293b] p-5 rounded-lg shadow-sm">
+            <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Hazard Confidence</h3>
+            <p className="text-3xl font-mono font-extrabold mt-2 text-cyan-400">{systemState.hazardState} : {systemState.confidence}</p>
           </div>
-
-        </div>
-
-        {/* Reactive Flame Alert Banner */}
-        <div className={`mt-6 p-6 rounded-xl border transition-all duration-300 ${
+          
+          <div className={`p-6 rounded-xl border transition-all duration-300 ${
           systemState.flame === "ALARM" 
             ? "bg-red-950/40 border-red-500/50 text-red-200" 
             : "bg-slate-900 border-slate-800 text-slate-400"
         }`}>
-          <h3 className="text-xs uppercase font-semibold tracking-wider">Flame Hazard Status</h3>
+          <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Flame Hazard Status</h3>
           <p className={`text-2xl font-black mt-2 ${
             systemState.flame === "ALARM" ? "text-red-500 animate-pulse" : "text-emerald-400"
           }`}>
             {systemState.flame}
           </p>
         </div>
-          <div className="">
+        <div className="">
              <LiveStream />
           </div>
+        </div>
+
+        {/* Reactive Flame Alert Banner */}
+        
+          
+      </div>
       </div>
     </div>
   );

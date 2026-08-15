@@ -41,10 +41,12 @@ function getInitials(name) {
   return name.slice(0, 2).toUpperCase();
 }
 
-export default function TopHeader({ onSearch, onMobileMenuToggle }) {
+      
+      
+export default function TopHeader({ onSearch, onMobileMenuToggle, isNotificationOpen, onToggleNotifications ,onCloseNotifications}) {
   const [site, setSite] = useState('North Campus - Zone A');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  
   const [notifications, setNotifications] = useState([]);
   const [hasUnread, setHasUnread] = useState(false);
   const dropdownRef = useRef(null);
@@ -76,8 +78,14 @@ export default function TopHeader({ onSearch, onMobileMenuToggle }) {
   // Close notification dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsNotificationOpen(false);
+      if (
+        isNotificationOpen && 
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target)
+      ) {
+        if (onCloseNotifications) {
+          onCloseNotifications(); // 3. Use explicit close handler
+        }
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -189,10 +197,7 @@ export default function TopHeader({ onSearch, onMobileMenuToggle }) {
         {/* Notifications Icon Button */}
         <div className="relative" ref={dropdownRef}>
           <button 
-            onClick={() => {
-              setIsNotificationOpen(!isNotificationOpen);
-              setHasUnread(false);
-            }}
+            onClick={onToggleNotifications}
             className="relative p-2 text-slate-400 hover:text-gray-100 hover:bg-[#101726] rounded border border-[#1e293b] transition-colors"
             aria-label="Notifications"
           >
