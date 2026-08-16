@@ -40,7 +40,17 @@ const Register = async (req, res) => {
     await newUser.save();
 
     // Generate ONE long-lived token (e.g., 7 days)
-    const token = jwt.sign({ userId: user._id  , name : user.name , role: user.role , email : user.email}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
+    // ✅ Corrected Line 42:
+const token = jwt.sign(
+  { 
+    userId: newUser._id, 
+    name: newUser.name, 
+    role: newUser.role, 
+    email: newUser.email 
+  }, 
+  process.env.JWT_SECRET, // or your secret variable
+  { expiresIn: '7d' }
+);
 
     // ESSENTIAL: Send a clean JSON response back to end the request smoothly
     return res.status(201).json({
