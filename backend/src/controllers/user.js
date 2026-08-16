@@ -48,7 +48,7 @@ const token = jwt.sign(
     role: newUser.role, 
     email: newUser.email 
   }, 
-  process.env.JWT_SECRET, // or your secret variable
+  process.env.ACCESS_TOKEN_SECRET, // or your secret variable
   { expiresIn: '7d' }
 );
 
