@@ -36,6 +36,14 @@ const UserSchema = new mongoose.Schema({
     enum: ['active', 'suspended', 'pending'],
     default: 'active'
   },
+  cardUID: {
+      type: String,
+      default: null,
+      unique: true,
+      sparse: true, // Allows multiple null values while keeping string UIDs unique
+      uppercase: true,
+      trim: true,
+  }
   // // Sub-document array for tracking active refresh tokens/sessions across multiple browsers
   // activeSessions: [{
   //   tokenVersion: { type: Number, default: 0 },

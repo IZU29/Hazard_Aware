@@ -4,6 +4,7 @@ import Login from './Login';
 import Home from './Home';
 import Register from './Register';
 import axios from 'axios';
+import Dashboard from './Dashboard/Dashboard';
 
 export default function App() {
   // const navigate = useNavigate();
@@ -44,9 +45,9 @@ export default function App() {
           path="/" 
           element={isAuthenticated ? <Home setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/login" replace />} 
         />
+      <Route path="/dashboard/*" element={<Dashboard />} />
 
-        {/* 3. Catch-all: Redirect any random URL back to home/login */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
   );
