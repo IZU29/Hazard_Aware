@@ -16,7 +16,7 @@ const { Component } = require('./src/sim/components');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const { attachCameraWS } = require('./src/utils/cam');
-const { setupAccessSockets } = require('./src/sockets/accessSocket'); // 2. Socket Handler Import
+const { setupAccessSockets } = require('./src/sockets/access_sockets'); // 2. Socket Handler Import
 
 // Create HTTP Server
 const server = http.createServer(app);

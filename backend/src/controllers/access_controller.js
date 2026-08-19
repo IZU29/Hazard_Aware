@@ -1,4 +1,4 @@
-import User from '../models/user.js';
+const User = require('../models/user.js');
 
 // Get all users and all active authorized cards for NVS sync
  const getAccessOverview = async (req, res) => {
