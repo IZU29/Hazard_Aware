@@ -31,12 +31,12 @@ const login = async (req, res) => {
 
 
 const Register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, cardUID } = req.body;
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: "Email already exists" });
 
-    const newUser = new User({ name, email, password });
+    const newUser = new User({ name, email, password, cardUID});
     await newUser.save();
 
     // Generate ONE long-lived token (e.g., 7 days)
@@ -56,7 +56,7 @@ const token = jwt.sign(
     return res.status(201).json({
       message: "Registration successful",
       token,
-      user: { id: newUser._id, name: newUser.name, email: newUser.email }
+      user: { id: newUser._id, name: newUser.name, email: newUser.email , cardDetails : newUser.cardUID }
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });

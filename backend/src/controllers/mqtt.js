@@ -70,16 +70,27 @@ const connectBroker = (req, res) => {
 const manageRfidCard = (req, res) => {
   const { action, cardId } = req.body;
 
-  if (!action || !cardId) {
-    return res.status(400).json({ success: false, message: 'Action and cardId are required' });
+  if (!action) {
+    return res.status(400).json({ success: false, message: 'Action is required' });
   }
 
+  // Pure state reset: clear unidentified card buffer without publishing to MQTT
+  if (action === "CLEAR_UNIDENTIFIED") {
+    systemState.unidentifiedCardId = null;
+    return res.status(200).json({ success: true, message: 'Unidentified card buffer cleared' });
+  }
+
+  if (!cardId) {
+    return res.status(400).json({ success: false, message: 'cardId is required for hardware commands' });
+  }
+
+  // Dispatch hardware commands (ADD_CARD / DELETE_CARD) to ESP32
   const payload = JSON.stringify({ action, cardId });
   mqttClient.publish(MQTT_CMD_TOPIC, payload, {}, (err) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Failed to dispatch command to ESP32' });
     }
-    
+
     if (action === "ADD_CARD" && systemState.unidentifiedCardId === cardId) {
       systemState.unidentifiedCardId = null;
     }
