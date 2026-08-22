@@ -5,6 +5,7 @@ import Home from './Home';
 import Register from './Register';
 import axios from 'axios';
 import Dashboard from './Dashboard/Dashboard';
+import { AuthProvider } from './AuthContext';
 
 export default function App() {
   // const navigate = useNavigate();
@@ -47,6 +48,7 @@ export default function App() {
   //   return <div>Loading secure session...</div>; // Prevent flash of login screen
   // }
   return (
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         {/* 1. Login Route: If already logged in, redirect straight to Home */}
@@ -68,5 +70,6 @@ export default function App() {
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
   );
 }

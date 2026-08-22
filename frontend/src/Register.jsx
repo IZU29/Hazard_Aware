@@ -1,6 +1,7 @@
 import React , {useState , useEffect} from 'react'
 import axios from 'axios';
 import { ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
+import { useAuth } from './AuthContext';
 
 const Register = ({ setIsAuthenticated , handleAuthorizeCard, setLoggedUser}) => {
 const [name, setName] = useState('');
@@ -10,6 +11,7 @@ const [confirm, setConfirm] = useState('');
 const [isLoading, setIsLoading] = useState(false);
 const [error, setError] = useState('');
 const [rfidCard , setRfidCard] = useState('')
+const { loginUser } = useAuth();
  
 useEffect(() => {
     const eventSource = new EventSource('https://hazard-aware.onrender.com/api/stream');
@@ -71,6 +73,7 @@ const handleRegister = async (e) => {
       });
       setLoggedUser(response.data)
       const { token, user } = response.data;
+      loginUser(response.data.user);
       console.log(response);
       // 2. If backend validates successfully, it will have sent a 'Set-Cookie' header.
       // Your browser automatically saves it. We just update the frontend state.

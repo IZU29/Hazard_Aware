@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {useNavigate , Link} from 'react-router-dom'
 import axios from 'axios';
-
+import { useAuth } from './AuthContext';
 
 export default function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState('');
@@ -9,10 +9,11 @@ export default function Login({ setIsAuthenticated }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { loginUser } = useAuth();
   const handleLogin = async (e) => {e.preventDefault();
     try {
       const response = await axios.post('https://hazard-aware.onrender.com/user/login', { email, password });
-      
+     
       // 1. Extract the token from the JSON response body
       const { token, user } = response.data;
       console.log(response)
@@ -21,7 +22,7 @@ export default function Login({ setIsAuthenticated }) {
       setIsAuthenticated(true)
       // 3. Successfully redirect home!
       navigate('/home' , { replace: true });
-      
+      loginUser(response.data.user);
     } catch (error) {
       console.error("Login failed:", error.response?.data?.message || error.message);
     }
