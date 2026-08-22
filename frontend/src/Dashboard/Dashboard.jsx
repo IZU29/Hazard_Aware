@@ -6,7 +6,7 @@ import SideBar from './SideBar';
 import SignalOverview from './Signal_overview';
 import AccessControl from './Access_control';
 
-export default function Dashboard() {
+export default function Dashboard({handleAuthorizeCard , loggedUser}) {
   const [systemState, setSystemState] = useState({
     timestamp: "Connecting...",
     temp: "--°C",
@@ -50,22 +50,6 @@ export default function Dashboard() {
     };
   }, []);
 
-  const handleAuthorizeCard = async (cardId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/stream/rfid`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: "ADD_CARD", cardId })
-      });
-      const resData = await response.json();
-      if (resData.success) {
-        alert(`Card ${cardId} authorized successfully!`);
-        setSystemState(prev => ({ ...prev, unidentifiedCardId: null }));
-      }
-    } catch (err) {
-      console.error("Failed to authorize card:", err);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center">
@@ -94,6 +78,7 @@ export default function Dashboard() {
                   systemState={systemState}
                   isOnline={isOnline}
                   handleAuthorizeCard={handleAuthorizeCard}
+                  loggedUser = {loggedUser}
                 />
               }
             />

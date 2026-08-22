@@ -1,7 +1,7 @@
 import React from 'react';
 import Livestream from './Livestream';
 
-export default function SignalOverview({ systemState, isOnline, handleAuthorizeCard }) {
+export default function SignalOverview({ systemState, isOnline, handleAuthorizeCard, loggedUser}) {
   return (
     <div className="w-full p-6 overflow-y-auto">
       {/* Header */}
@@ -42,7 +42,7 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
         {/* Card Reader */}
         <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">RFID Access</h3>
-          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.lastCardId}</p>
+          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{loggedUser.cardUID}</p>
         </div>
 
         {/* Temperature */}

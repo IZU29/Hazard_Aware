@@ -2,7 +2,7 @@ import React , {useState , useEffect} from 'react'
 import axios from 'axios';
 import { ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 
-const Register = ({ setIsAuthenticated }) => {
+const Register = ({ setIsAuthenticated , handleAuthorizeCard, setLoggedUser}) => {
 const [name, setName] = useState('');
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
@@ -35,9 +35,22 @@ useEffect(() => {
   }, []);
 
 const isCardPresent = Boolean(rfidCard && rfidCard.trim().length > 0);
-const handleClearCard = () => {
-    setRfidCard('');
-  };
+const handleClearCard = async () => {
+  try {
+    const response = await fetch(`https://hazard-aware.onrender.com/api/stream/rfid`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: "CLEAR_UNIDENTIFIED" }),
+    });
+
+    const resData = await response.json();
+    if (resData.success) {
+      setRfidCard('')
+    }
+  } catch (err) {
+    console.error("Failed to clear card state:", err);
+  }
+}
 const handleRegister = async (e) => {
     
     e.preventDefault();
@@ -56,6 +69,7 @@ const handleRegister = async (e) => {
         accountStatus: 'active',
         cardUID: rfidCard
       });
+      setLoggedUser(response.data)
       const { token, user } = response.data;
       console.log(response);
       // 2. If backend validates successfully, it will have sent a 'Set-Cookie' header.
@@ -71,6 +85,7 @@ const handleRegister = async (e) => {
     } finally {
       setIsLoading(false);
     }
+    handleAuthorizeCard(rfidCard)
   };
 
   return (
