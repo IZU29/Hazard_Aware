@@ -2,6 +2,7 @@ import React , {useState , useEffect} from 'react'
 import axios from 'axios';
 import { ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { useAuth } from './AuthContext';
+import {Link} from 'react-router-dom'
 
 const Register = ({ setIsAuthenticated , handleAuthorizeCard, setLoggedUser}) => {
 const [name, setName] = useState('');
@@ -171,6 +172,7 @@ const handleRegister = async (e) => {
         </div>
       </div>
         <button type="submit" style={styles.button}>Submit & Grant Access</button>
+        <div className="text-xs flex justify-evenly"><p className="">Already have an account?</p><Link to='/login' className='text-[#007bff]'>Login now</Link></div>
       </form>
     </div>
   
