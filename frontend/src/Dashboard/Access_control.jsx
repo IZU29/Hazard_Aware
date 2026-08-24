@@ -262,12 +262,12 @@ export default function AccessControl() {
         </div>
 
         {/* Column 2: System Operators Table */}
-        <div className="bg-[#101726] p-4 rounded-xl border border-[#1e293b] space-y-4 lg:col-span-2">
+        <div className="bg-[#101726] p-4 rounded-xl border border-[#1e293b] space-y-2 lg:col-span-2">
           <h2 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
             Registered System Users & Authorized Cards
           </h2>
 
-          <div className="divide-y divide-[#1e293b] border border-[#1e293b] rounded-lg overflow-hidden bg-[#080c14]">
+          <div className="divide-y divide-[#1e293b] border border-[#1e293b] rounded-lg max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 bg-[#080c14]">
             {users.map((u) => (
               <div
                 key={u._id}

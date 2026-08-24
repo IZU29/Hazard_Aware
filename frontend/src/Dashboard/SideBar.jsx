@@ -81,7 +81,7 @@ export default function Sidebar({ isOpen, onClose, onOpenNotifications }) {
   };
 
   return (
-    <>
+    <div className=''>
       {isOpen && (
         <div
           onClick={onClose}
@@ -195,6 +195,6 @@ export default function Sidebar({ isOpen, onClose, onOpenNotifications }) {
           </div>
         </div>
       </aside>
-    </>
+    </div>
   );
 }
