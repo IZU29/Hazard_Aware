@@ -7,19 +7,6 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
   return (
     <div className="w-full p-6 overflow-y-auto">
       {/* Header */}
-      <header className="mb-8 border-b border-slate-800 pb-4">
-        <h1 className="text-3xl font-extrabold tracking-tight text-cyan-400">
-          HARM-AWARE GATEWAY
-        </h1>
-        <p className="text-sm mt-1 text-slate-400">
-          Pipeline Connection: {isOnline ? (
-            <span className="text-emerald-400 font-mono">LIVE</span>
-          ) : (
-            <span className="text-red-500 font-mono">OFFLINE</span>
-          )}
-          <span className="ml-2 text-xs text-slate-500">({systemState?.timestamp})</span>
-        </p>
-      </header>
 
       {/* Unidentified Card Prompt Banner */}
       {systemState?.unidentifiedCardId && (
@@ -59,6 +46,11 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
           <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.gas}</p>
         </div>
 
+        <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
+          <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Smoke Level</h3>
+          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.gas}</p>
+        </div>
+
         {/* AI Confidence */}
         <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Hazard Confidence</h3>
@@ -82,7 +74,7 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
         </div>
 
         {/* Camera Stream Component */}
-        <div className="md:col-span-3">
+        <div className="">
           <Livestream />
         </div>
       </div>

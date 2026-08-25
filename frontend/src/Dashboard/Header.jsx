@@ -134,7 +134,7 @@ export default function TopHeader({ onSearch, onMobileMenuToggle, isNotification
         </button>
 
         <h2 className="text-xs md:text-sm font-bold tracking-wider text-gray-200 uppercase whitespace-nowrap">
-          Overview
+           HAZARD-AWARE
         </h2>
 
         <div className="hidden sm:block h-4 w-[1px] bg-[#1e293b]" />

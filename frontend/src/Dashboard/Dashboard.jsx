@@ -5,6 +5,7 @@ import Header from './Header';
 import SideBar from './SideBar';
 import SignalOverview from './Signal_overview';
 import AccessControl from './Access_control';
+import { Surveillance } from './Surveillance';
 
 export default function Dashboard({handleAuthorizeCard , loggedUser}) {
   const [systemState, setSystemState] = useState({
@@ -95,6 +96,7 @@ export default function Dashboard({handleAuthorizeCard , loggedUser}) {
             />
             {/* Direct match for /dashboard/access-control */}
             <Route path="access-control" element={<AccessControl />} />
+            <Route path="surveillance" element={<Surveillance />} />
           </Routes>
         </main>
       </div>

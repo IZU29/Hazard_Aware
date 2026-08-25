@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Stores user details e.g., { name, email, rfidCard }
+  const [user, setUser] = useState({ cardDetails: {} }); // Stores user details e.g., { name, email, rfidCard }
 
   const loginUser = (userData) => {
     setUser(userData);

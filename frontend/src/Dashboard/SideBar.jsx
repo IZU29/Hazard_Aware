@@ -95,21 +95,7 @@ export default function Sidebar({ isOpen, onClose, onOpenNotifications }) {
         }`}
       >
         <div className="overflow-y-auto">
-          <div className="h-12 flex items-center justify-between px-4 border-b border-[#1e293b] bg-[#101726]/40">
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
-              <span className="text-[11px] font-bold tracking-wider text-gray-300 uppercase font-mono">
-                System Navigation
-              </span>
-            </div>
-
-            <button
-              onClick={onClose}
-              className="p-1 text-slate-400 hover:text-gray-100 md:hidden rounded hover:bg-[#101726]"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+          
 
           <nav className="p-3 space-y-1">
             {navItems.map((item) => {
