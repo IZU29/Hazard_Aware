@@ -13,6 +13,7 @@ export default function Dashboard({handleAuthorizeCard , loggedUser}) {
     temp: "--°C",
     flame: "Safe",
     gas: 0,
+    smoke: 0,
     lastCardId: "No Scan",
     unidentifiedCardId: null,
     hazardState: "None",

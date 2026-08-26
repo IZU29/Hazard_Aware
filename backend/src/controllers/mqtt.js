@@ -9,6 +9,7 @@ let systemState = {
   temp: "--°C",
   flame: "Safe",
   gas: 0,
+  smoke: 0,
   lastCardId: "No Scan",
   unidentifiedCardId: null,
   hazardState: "Normal",
@@ -32,7 +33,8 @@ mqttClient.on('message', (topic, message) => {
     if (payload.type === "ENVIRONMENT") {
       systemState.temp = payload.temp;
       systemState.flame = payload.flame;
-      systemState.gas = payload.gas;
+      systemState.gas = payload.mq6;
+      systemState.smoke = payload.mq2;
       systemState.hazardState = payload.hazard;
       systemState.confidence = payload.confidence;
     } else if (payload.type === "ACCESS") {

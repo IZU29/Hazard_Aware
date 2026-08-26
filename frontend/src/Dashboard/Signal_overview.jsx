@@ -48,7 +48,7 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
 
         <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Smoke Level</h3>
-          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.gas}</p>
+          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.smoke}</p>
         </div>
 
         {/* AI Confidence */}

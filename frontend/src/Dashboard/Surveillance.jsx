@@ -17,7 +17,8 @@ export const Surveillance = () => {
 
  const [imageSrc, setImageSrc] = useState(null);
   const [isLive, setIsLive] = useState(false);
-
+  const [streamError, setStreamError] = useState(false);
+  const [activeClip, setActiveClip] = useState(null);
   useEffect(() => {
     // Listen for binary video frames sent from backend via Socket.io
     
@@ -43,8 +44,7 @@ export const Surveillance = () => {
       socket.off('disconnect');
     };
   }, []);
-  const [streamError, setStreamError] = useState(false);
-  const [activeClip, setActiveClip] = useState(null);
+
 
   // Mock list of recorded hazard event clips from backend storage
   const recordedEvents = [
@@ -75,10 +75,12 @@ export const Surveillance = () => {
   return (
     <div className="space-y-6 p-4">
       {/* Header Banner */}
-      <div className="flex items-center justify-between bg-slate-900 p-6 rounded-2xl border border-slate-800">
+      <div className="flex items-center justify-between bg-slate-900 p-4 rounded-2xl border border-slate-800">
         <div>
           <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <div className="p-2 bg-cyan-950/60 border border-cyan-500/30 rounded-lg text-cyan-400">
             <Camera className="w-6 h-6 text-cyan-400" />
+            </div>
             Live Hardware Surveillance & Recording
           </h2>
           <p className="text-xs text-slate-400 mt-1">
@@ -101,7 +103,9 @@ export const Surveillance = () => {
         <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3 px-2">
             <span className="text-xs font-semibold uppercase text-slate-400 flex items-center gap-2">
+              <div className="p-2 bg-cyan-950/60 border border-cyan-500/30 rounded-lg text-cyan-400">
               <Eye className="w-4 h-4 text-cyan-400" />
+              </div>
               Primary Camera Stream (ESP32-CAM)
             </span>
             <button 
@@ -114,7 +118,7 @@ export const Surveillance = () => {
 
           {/* Stream Render Viewport */}
           <div className="relative aspect-video w-full bg-slate-950 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
-            {!streamError ? (
+            {imageSrc ? (
               <img
                 src={imageSrc}
                 alt="ESP32 Live Stream"
