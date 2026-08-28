@@ -13,41 +13,66 @@ reconnectionDelay: 2000
 
 export const Surveillance = () => {
   // ESP32-CAM Video Endpoint URL
-  const STREAM_URL = "http://localhost:5000/api/stream/video"; 
+
 
  const [imageSrc, setImageSrc] = useState(null);
   const [isLive, setIsLive] = useState(false);
   const [streamError, setStreamError] = useState(false);
   const [activeClip, setActiveClip] = useState(null);
+  const [recordedEvents, setRecordedEvents] = useState([]);
+
+  const fetchSurveillanceEvents = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch('https://hazard-aware.onrender.com/api/surveillance/events');
+      const data = await res.json();
+      if (data.success) {
+        setRecordedEvents(data.events);
+      }
+    } catch (err) {
+      console.error('Error fetching recorded events:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // Listen for binary video frames sent from backend via Socket.io
-    
-    socket.on('video-frame', (buffer) => {
-      const arrayBuffer = buffer instanceof ArrayBuffer ? buffer : buffer.buffer || buffer;
-      // Convert raw binary ArrayBuffer to a browser image Blob
-      const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
-      const url = URL.createObjectURL(blob);
+  // 1. Fetch initial event history from database
+  fetchSurveillanceEvents();
 
-      setImageSrc((prevUrl) => {
-        if (prevUrl) URL.revokeObjectURL(prevUrl); // Revoke previous URL to prevent memory leaks
-        return url;
-      });
-      setIsLive(true);
+  // 2. Handle incoming binary video frame buffers
+  socket.on('video-frame', (buffer) => {
+    const arrayBuffer = buffer instanceof ArrayBuffer ? buffer : buffer.buffer || buffer;
+    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+    const url = URL.createObjectURL(blob);
+
+    setImageSrc((prevUrl) => {
+      if (prevUrl) URL.revokeObjectURL(prevUrl); // Revoke previous URL to avoid memory leaks
+      return url;
     });
+    setIsLive(true);
+  });
 
-    socket.on('disconnect', () => {
-      setIsLive(false);
-    });
+  // 3. Handle live status on disconnect
+  socket.on('disconnect', () => {
+    setIsLive(false);
+  });
 
-    return () => {
-      socket.off('video-frame');
-      socket.off('disconnect');
-    };
-  }, []);
+  // 4. Listen for newly processed Cloudinary event recordings in real time
+  socket.on('NEW_SURVEILLANCE_EVENT', (newEvent) => {
+    setRecordedEvents((prev) => [newEvent, ...prev]);
+  });
 
+  // Cleanup all listeners on unmount
+  return () => {
+    socket.off('video-frame');
+    socket.off('disconnect');
+    socket.off('NEW_SURVEILLANCE_EVENT');
+  };
+}, []);
 
   // Mock list of recorded hazard event clips from backend storage
-  const recordedEvents = [
+  const recordedevents = [
     {
       id: "evt_001",
       title: "Flame Detected - Zone A",

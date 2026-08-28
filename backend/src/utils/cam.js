@@ -1,4 +1,6 @@
 // cam.js
+const { handleIncomingFrame, saveHazardClip } = require('../services/surveillance');
+
 const attachCameraWS = (server, io) => {
   const WebSocket = require('ws');
   const wss = new WebSocket.Server({ noServer: true });
@@ -24,6 +26,7 @@ const attachCameraWS = (server, io) => {
         // 'volatile' prevents server memory overhead if a client network drops frames
         io.volatile.emit('video-frame', data);
       }
+      handleIncomingFrame(data);
     });
 
     ws.on('close', () => console.log('📷 ESP32-CAM Disconnected'));

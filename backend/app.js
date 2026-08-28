@@ -9,6 +9,7 @@ const UserRouter = require('./src/routes/user');
 const MqttRouter = require('./src/routes/mqtt');
 const authRoutes = require('./src/routes/auth');
 const accessRouter = require('./src/routes/access_controller'); // 1. Access Route Import
+const surveillanceRoutes = require('./src/routes/surveillance');
 
 // Database & Utilities
 const ConnectDB = require('./src/db/connect');
@@ -76,7 +77,7 @@ app.use('/user', UserRouter);
 app.use('/api/auth', authRoutes);
 app.use('/api/stream', MqttRouter);
 app.use('/api/access', accessRouter); // 6. Mounted Access API Route
-
+app.use('/api/surveillance', surveillanceRoutes);
 // Camera WebSocket Attach
 attachCameraWS(server, io);
 

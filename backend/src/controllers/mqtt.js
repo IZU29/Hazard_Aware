@@ -3,6 +3,7 @@ const mqtt = require('mqtt');
 const MQTT_BROKER = 'mqtt://broker.hivemq.com:1883';
 const MQTT_STREAM_TOPIC = 'futo/security/gateway/log';
 const MQTT_CMD_TOPIC = 'futo/security/gateway/command';
+const { saveHazardClip } = require('../services/surveillance');
 
 let systemState = {
   timestamp: "Awaiting hardware sync...",
@@ -43,6 +44,12 @@ mqttClient.on('message', (topic, message) => {
       systemState.unidentifiedCardId = payload.cardId;
     }
 
+    if (payload.hazardState === 'FIRE' || payload.type === 'UNIDENTIFIED_RFID') {
+    saveHazardClip(
+      payload.type === 'UNIDENTIFIED_RFID' ? 'UNAUTHORIZED_RFID' : 'ALARM',
+      payload.type === 'UNIDENTIFIED_RFID' ? `Unknown Card: ${payload.cardId}` : 'Flame/Gas Alert'
+    );
+  }
     // Push data to all active web clients in real-time
     connectedWebClients.forEach(client => {
       client.res.write(`data: ${JSON.stringify(systemState)}\n\n`);
