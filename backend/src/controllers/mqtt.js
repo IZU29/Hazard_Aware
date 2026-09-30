@@ -97,7 +97,7 @@ const connectBroker = (req, res) => {
   });
 };
 
-const managerRfidCard = (req, res) => {
+const manageRfidCard = (req, res) => {
   const { action, cardId, targetNode } = req.body;
 
   if (!action) {
@@ -147,5 +147,5 @@ const managerRfidCard = (req, res) => {
 
 module.exports = {
   connectBroker,
-  managerRfidCard
+  manageRfidCard
 };
