@@ -6,8 +6,9 @@ import SideBar from './SideBar';
 import SignalOverview from './Signal_overview';
 import AccessControl from './Access_control';
 import { Surveillance } from './Surveillance';
+import { Systems } from './Systems';
 
-export default function Dashboard({handleAuthorizeCard , loggedUser}) {
+export default function Dashboard({ handleAuthorizeCard, loggedUser }) {
   const [systemState, setSystemState] = useState({
     timestamp: "Connecting...",
     temp: "--°C",
@@ -23,6 +24,17 @@ export default function Dashboard({handleAuthorizeCard , loggedUser}) {
   const [isOnline, setIsOnline] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
+  // Active Node state initialized to NODE_02_ANNEX
+  const [activeNode, setActiveNode] = useState({
+    nodeId: 'NODE_02_ANNEX',
+    name: 'Warehouse Section B',
+    location: 'Warehouse // Section B',
+    status: 'ONLINE',
+    ipAddress: '10.10.10.212',
+    lastHeartbeat: new Date().toISOString(),
+    isPrimary: true,
+  });
 
   const API_BASE_URL = 'https://hazard-aware.onrender.com';
 
@@ -52,7 +64,6 @@ export default function Dashboard({handleAuthorizeCard , loggedUser}) {
     };
   }, []);
 
-
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center">
       <Header
@@ -72,7 +83,7 @@ export default function Dashboard({handleAuthorizeCard , loggedUser}) {
         {/* Dynamic Route Viewport */}
         <main className="flex-1 overflow-y-auto bg-[#080c14]">
           <Routes>
-            {/* Render SignalOverview directly on /dashboard root */}
+            {/* Direct match for /dashboard root */}
             <Route
               index
               element={
@@ -80,7 +91,8 @@ export default function Dashboard({handleAuthorizeCard , loggedUser}) {
                   systemState={systemState}
                   isOnline={isOnline}
                   handleAuthorizeCard={handleAuthorizeCard}
-                  loggedUser = {loggedUser}
+                  loggedUser={loggedUser}
+                  activeNode={activeNode}
                 />
               }
             />
@@ -92,12 +104,21 @@ export default function Dashboard({handleAuthorizeCard , loggedUser}) {
                   systemState={systemState}
                   isOnline={isOnline}
                   handleAuthorizeCard={handleAuthorizeCard}
+                  activeNode={activeNode}
                 />
               }
             />
             {/* Direct match for /dashboard/access-control */}
             <Route path="access-control" element={<AccessControl />} />
-            <Route path="surveillance" element={<Surveillance />} />
+
+            {/* Direct match for /dashboard/surveillance */}
+            <Route path="surveillance" element={<Surveillance activeNode={activeNode} />} />
+
+            {/* Direct match for /dashboard/systems */}
+            <Route
+              path="systems"
+              element={<Systems activeNode={activeNode} setActiveNode={setActiveNode} />}
+            />
           </Routes>
         </main>
       </div>

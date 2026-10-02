@@ -49,7 +49,7 @@ const navItems = [
   { id: 'surveillance', label: 'Surveillance', icon: Cctv, path: '/dashboard/surveillance' },
   { id: 'alerts', label: 'Alerts', icon: Bell, badge: 3, path: '/dashboard/alerts' },
   { id: 'history', label: 'Event History', icon: History, path: '/dashboard/history' },
-  { id: 'reports', label: 'Reports', icon: FileText, path: '/dashboard/reports' },
+  { id: 'Systems', label: 'Systems', icon: FileText, path: '/dashboard/Systems' },
   { id: 'settings', label: 'Settings', icon: Settings, path: '/dashboard/settings' },
 ];
 
