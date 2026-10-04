@@ -1,4 +1,4 @@
-// cam.js
+// backend/src/utils/cam.js
 const { handleIncomingFrame, saveHazardClip } = require('../services/surveillance');
 
 const attachCameraWS = (server, io) => {
@@ -18,30 +18,19 @@ const attachCameraWS = (server, io) => {
     });
   });
 
-  wss.on('connection', (ws, request) => {
-    // Extract location metadata from the ESP32-CAM request URL query params
-    const urlParams = new URLSearchParams(request.url.split('?')[1]);
-    const locationId = urlParams.get('locationId') || 'default_location';
-    const locationName = urlParams.get('locationName') || 'Main Surveillance';
-
-    console.log(`📷 ESP32-CAM connected via WebSocket [${locationName} (${locationId})]`);
+  wss.on('connection', (ws) => {
+    console.log('📹 ESP32-CAM connected via WebSocket');
 
     ws.on('message', (data, isBinary) => {
       if (isBinary && io) {
-        // Emit location-tagged video stream payload to Socket.io clients
         // 'volatile' prevents server memory overhead if a client network drops frames
-        io.volatile.emit('video-frame', {
-          locationId,
-          locationName,
-          frame: data
-        });
+        io.volatile.emit('video-frame', data);
       }
-      
-      handleIncomingFrame(data, { locationId, locationName });
+      handleIncomingFrame(data);
     });
 
-    ws.on('close', () => console.log(`📷 ESP32-CAM Disconnected [${locationId}]`));
-    ws.on('error', (err) => console.error(`📷 ESP32-CAM WS Error [${locationId}]:`, err.message));
+    ws.on('close', () => console.log('📹 ESP32-CAM Disconnected'));
+    ws.on('error', (err) => console.error('📹 ESP32-CAM WS Error:', err.message));
   });
 };
 
