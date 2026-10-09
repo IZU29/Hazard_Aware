@@ -1,9 +1,9 @@
 import React from 'react';
 import Livestream from './Livestream';
 import { useAuth } from '../AuthContext';
-
-export default function SignalOverview({ systemState, isOnline, handleAuthorizeCard, loggedUser}) {
+function SystemInitialize({ systemState, isOnline, handleAuthorizeCard, loggedUser}){
   const { user } = useAuth();
+
   return (
     <div className="w-full p-6 overflow-y-auto">
       {/* Header */}
@@ -27,46 +27,46 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
       )}
 
       {/* Dashboard Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
         {/* Card Reader */}
-        <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
+        <div className="bg-[#010726] border border-[#01e293] p-4 md:p-2 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">RFID Access</h3>
-          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{user.cardDetails}</p>
+          <p className="text-md font-mono font-extrabold mt-2 text-cyan-400">{user.cardDetails}</p>
         </div>
 
         {/* Temperature */}
-        <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
+        <div className="bg-[#010726] border border-[#01e293] p-4 md:p-2 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Temperature</h3>
-          <p className="text-3xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.temp}</p>
+          <p className=" text-md font-mono font-extrabold mt-2 text-cyan-400">{systemState?.temp}</p>
         </div>
 
         {/* Gas Level */}
-        <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
+        <div className="bg-[#010726] border border-[#01e293] p-4 md:p-2 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Gas Level</h3>
-          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.gas}</p>
+          <p className="text-md font-mono font-extrabold mt-2 text-cyan-400">{systemState?.gas}</p>
         </div>
 
-        <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
+        <div className="bg-[#010726] border border-[#01e293] p-4 md:p-2 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Smoke Level</h3>
-          <p className="text-4xl font-mono font-extrabold mt-2 text-cyan-400">{systemState?.smoke}</p>
+          <p className="text-md font-mono font-extrabold mt-2 text-cyan-400">{systemState?.smoke}</p>
         </div>
 
         {/* AI Confidence */}
-        <div className="bg-[#010726] border border-[#01e293] p-5 rounded-lg shadow-sm">
+        <div className="bg-[#010726] border border-[#01e293] p-4 md:p-2 rounded-lg shadow-sm">
           <h3 className="text-xs uppercase font-semibold text-slate-400 tracking-wider font-mono">Hazard Confidence</h3>
-          <p className="text-2xl font-mono font-extrabold mt-2 text-cyan-400">
+          <p className="font-mono font-extrabold mt-2 text-cyan-400 text-md">
             {systemState?.hazardState}: {systemState?.confidence}%
           </p>
         </div>
 
         {/* Flame Hazard Status */}
-        <div className={`p-5 rounded-xl border transition-all duration-300 ${
+        <div className={`p-4 md:p-2 rounded-xl border transition-all duration-300 ${
           systemState?.flame === "ALARM"
             ? "bg-red-950/40 border-red-500/50 text-red-200"
             : "bg-slate-900 border-slate-800 text-slate-400"
         }`}>
-          <h3 className="text-xs uppercase font-semibold tracking-wider font-mono">Flame Hazard Status</h3>
-          <p className={`text-2xl font-black mt-2 ${
+          <h3 className="text-xs uppercase font-semibold tracking-wider font-mono">Flame Status</h3>
+          <p className={`text-md font-black mt-2 ${
             systemState?.flame === "ALARM" ? "text-red-500 animate-pulse" : "text-emerald-400"
           }`}>
             {systemState?.flame}
@@ -74,10 +74,35 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
         </div>
 
         {/* Camera Stream Component */}
-        <div className="">
-          <Livestream />
-        </div>
+        
       </div>
+      {/* <div className="col-span-2">
+          <Livestream />
+        </div> */}
     </div>
   );
+}
+export default function SignalOverview({ systemState, isOnline, handleAuthorizeCard, loggedUser}) {
+  return(
+    <div className="px-2">
+    <h1 className="">{systemState.nodeId}</h1>
+    <SystemInitialize 
+    systemState = {systemState}
+    isOnline = {isOnline}
+    handleAuthorizeCard = {handleAuthorizeCard}
+    loggedUser = {loggedUser}
+    />
+    <h1 className="">Gateway</h1>
+    <SystemInitialize />
+    <div className="my-2 md:flex gap-2">
+      <div className="col-span-2">
+          <Livestream location={systemState.nodeId}/>
+        </div>
+        <div className="col-span-2">
+          <Livestream location={"Gateway"}/>
+        </div>
+    </div>
+    </div>
+  )
+ 
 }

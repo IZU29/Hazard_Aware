@@ -10,6 +10,7 @@ import { Systems } from './Systems';
 
 export default function Dashboard({ handleAuthorizeCard, loggedUser }) {
   const [systemState, setSystemState] = useState({
+    nodeId:"Loading...",
     timestamp: "Connecting...",
     temp: "--°C",
     flame: "Safe",
@@ -21,6 +22,17 @@ export default function Dashboard({ handleAuthorizeCard, loggedUser }) {
     confidence: 0
   });
 
+  const [newSystem, setNewSystem] = useState({
+    timestamp: "Connecting...",
+    temp: "--°C",
+    flame: "Safe",
+    gas: 0,
+    smoke: 0,
+    lastCardId: "No Scan",
+    unidentifiedCardId: null,
+    hazardState: "None",
+    confidence: 0
+  });
   const [isOnline, setIsOnline] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -44,8 +56,13 @@ export default function Dashboard({ handleAuthorizeCard, loggedUser }) {
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        setSystemState(data);
-        setIsOnline(true);
+        if (data.nodeId === "NODE_01_GATEWAY"){
+          setSystemState(data);
+          setIsOnline(true);
+        }
+        else{
+          setNewSystem(data)
+        }
       } catch (error) {
         console.error("Error parsing stream data:", error);
       }
@@ -93,6 +110,7 @@ export default function Dashboard({ handleAuthorizeCard, loggedUser }) {
                   handleAuthorizeCard={handleAuthorizeCard}
                   loggedUser={loggedUser}
                   activeNode={activeNode}
+                  newSystem ={newSystem}
                 />
               }
             />
@@ -104,7 +122,9 @@ export default function Dashboard({ handleAuthorizeCard, loggedUser }) {
                   systemState={systemState}
                   isOnline={isOnline}
                   handleAuthorizeCard={handleAuthorizeCard}
+                  loggedUser={loggedUser}
                   activeNode={activeNode}
+                  newSystem ={newSystem}
                 />
               }
             />

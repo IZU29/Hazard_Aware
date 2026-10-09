@@ -4,6 +4,7 @@ const MQTT_BROKER = 'mqtt://broker.hivemq.com:1883';
 // Wildcard subscription captures telemetry from all nodes
 const MQTT_STREAM_TOPIC = 'futo/security/+/log';
 const MQTT_CMD_TOPIC_PREFIX = 'futo/security';
+const {sendFireAlertSMS} = require('./sms')
 
 const { saveHazardClip } = require('../services/surveillance');
 
@@ -47,9 +48,10 @@ mqttClient.on('message', (topic, message) => {
     const nodeFromTopic = topicParts[2] === 'node_2' ? 'NODE_02_ANNEX' : 'NODE_01_GATEWAY';
     const nodeId = payload.node_id || payload.nodeId || nodeFromTopic;
 
-    const currentState = getNodeState(nodeId);
+   const currentState = getNodeState(nodeId);
+    currentState.nodeId = nodeId;
+    currentState.location = payload.location || (nodeId === 'NODE_02_ANNEX' ? 'Warehouse Section B' : 'Main Entrance Gateway');
     currentState.timestamp = new Date().toLocaleTimeString();
-
     if (payload.type === "ENVIRONMENT") {
       currentState.temp = payload.temp;
       currentState.flame = payload.flame;
@@ -64,6 +66,7 @@ mqttClient.on('message', (topic, message) => {
     }
 
     if (currentState.hazardState === 'FIRE' || payload.type === 'UNIDENTIFIED_RFID') {
+      sendFireAlertSMS(process.env.EMERGENCY_CONTACTS, currentState.nodeId)
       saveHazardClip(
         payload.type === 'UNIDENTIFIED_RFID' ? 'UNAUTHORIZED_RFID' : 'ALARM',
         payload.type === 'UNIDENTIFIED_RFID' ? `Unknown Card: ${payload.cardId}` : 'Flame/Gas Alert'

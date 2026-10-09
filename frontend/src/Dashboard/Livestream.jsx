@@ -12,7 +12,7 @@ const socket = io('https://hazard-aware.onrender.com', {
   reconnectionDelay: 2000
 });
 
-const LiveStream = () => {
+const LiveStream = ({location}) => {
   const [imageSrc, setImageSrc] = useState(null);
   const [isLive, setIsLive] = useState(false);
 
@@ -46,7 +46,7 @@ const LiveStream = () => {
     <div className="flex flex-col items-center justify-center p-4 bg-gray-900 rounded-2xl shadow-xl max-w-lg mx-auto text-white">
       {/* Card Header */}
       <div className="flex items-center justify-between w-full mb-3 px-2">
-        <h2 className="text-lg font-semibold tracking-wide">Live Camera Feed</h2>
+        <h2 className="text-lg font-semibold tracking-wide">{location} Camera Feed</h2>
         
         <div className="flex items-center space-x-2">
           <span className={`h-3 w-3 rounded-full ${isLive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
