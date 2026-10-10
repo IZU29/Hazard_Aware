@@ -82,7 +82,7 @@ function SystemInitialize({ systemState, isOnline, handleAuthorizeCard, loggedUs
     </div>
   );
 }
-export default function SignalOverview({ systemState, isOnline, handleAuthorizeCard, loggedUser}) {
+export default function SignalOverview({ systemState, isOnline, handleAuthorizeCard, loggedUser,newSystem}) {
   return(
     <div className="px-2">
     <h1 className="">{systemState.nodeId}</h1>
@@ -93,7 +93,11 @@ export default function SignalOverview({ systemState, isOnline, handleAuthorizeC
     loggedUser = {loggedUser}
     />
     <h1 className="">Gateway</h1>
-    <SystemInitialize />
+    <SystemInitialize 
+    systemState = {newSystem}
+    isOnline = {isOnline}
+    handleAuthorizeCard = {handleAuthorizeCard}
+    loggedUser = {loggedUser}/>
     <div className="my-2 md:flex gap-2">
       <div className="col-span-2">
           <Livestream location={systemState.nodeId}/>
