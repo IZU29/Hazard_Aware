@@ -19,14 +19,21 @@ const attachCameraWS = (server, io) => {
   });
 
   wss.on('connection', (ws) => {
+    const urlParams = new URLSearchParams(request.url.split('?')[1]);
+    const locationId = urlParams.get('locationId') || 'NODE_01_GATEWAY';
+    const locationName = urlParams.get('locationName') || 'Main Surveillance';
     console.log('📹 ESP32-CAM connected via WebSocket');
 
     ws.on('message', (data, isBinary) => {
       if (isBinary && io) {
         // 'volatile' prevents server memory overhead if a client network drops frames
-        io.volatile.emit('video-frame', data);
+        io.volatile.emit('video-frame', {
+          locationId,
+          locationName,
+          frame: data
+        });
       }
-      handleIncomingFrame(data);
+      handleIncomingFrame(data , { locationId, locationName });
     });
 
     ws.on('close', () => console.log('📹 ESP32-CAM Disconnected'));
